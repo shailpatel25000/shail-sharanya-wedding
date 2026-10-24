@@ -59,7 +59,7 @@
         '<nav class="strip" aria-label="Events"><ul class="tabs">' +
           evs.map(function (e) {
             return '<li><a class="tab" href="#' + e.id + '"' + (e.id === sel.id ? ' aria-current="true"' : '') + '>' +
-              '<small class="tnum">' + esc(e.dayLabel.split(",")[0].slice(0, 3)) + ' ' + dayNum(e.dateISO) + ' ' + monShort(e.dateISO) + '</small><b>' + esc(e.name) + '</b></a></li>';
+              '<small class="tnum">' + dayNum(e.dateISO) + ' ' + monShort(e.dateISO) + '</small><b>' + esc(e.name) + '</b></a></li>';
           }).join("") +
         '</ul></nav>' +
 
