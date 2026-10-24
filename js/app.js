@@ -18,8 +18,10 @@
   }
   function dayNum(iso) { return iso.slice(8, 10); }
   function monShort(iso) { return ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"][+iso.slice(5, 7) - 1]; }
-  function paletteStyle(p) {
-    return "--ev-bg:" + p.bg + ";--ev-fg:" + p.fg + ";--ev-accent:" + p.accent + ";--ev-accent2:" + p.accent2 + ";--ev-soft:" + p.soft;
+  function paletteStyle(ev) {
+    var p = ev.palette || ev;
+    return "--ev-bg:" + p.bg + ";--ev-fg:" + p.fg + ";--ev-accent:" + p.accent + ";--ev-accent2:" + p.accent2 + ";--ev-soft:" + p.soft +
+      (ev.wash ? ";--ev-wash:url('" + ev.wash + "')" : "");
   }
   var ICON_PIN = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 1 1 16 0z"/><circle cx="12" cy="10" r="3"/></svg>';
   var ICON_BACK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>';
@@ -50,7 +52,7 @@
 
   /* ---------- art with fallback ---------- */
   function artHTML(ev, cls) {
-    return '<div class="' + cls + '" style="' + paletteStyle(ev.palette) + '">' +
+    return '<div class="' + cls + '" style="' + paletteStyle(ev) + '">' +
       '<img src="' + esc(ev.art) + '" alt="' + esc(ev.name) + ' watercolour" data-ph="' + esc(ev.name) + '">' +
     '</div>';
   }
@@ -95,7 +97,7 @@
         '<h2 class="sec-title" id="ev-title">Events</h2>' +
         '<div class="ev-list">' +
           evs.map(function (e) {
-            return '<article class="ev" style="' + paletteStyle(e.palette) + '">' +
+            return '<article class="ev" style="' + paletteStyle(e) + '">' +
               '<div class="num tnum">' + dayNum(e.dateISO) + '<small>' + esc(e.dayLabel.split(",")[0].slice(0, 3)) + ' ' + monShort(e.dateISO) + '</small></div>' +
               '<h3 class="name">' + esc(e.name) + '</h3>' +
               '<p class="time tnum">' + esc(e.start) + ' to ' + esc(e.end) + '</p>' +
@@ -134,7 +136,7 @@
   }
 
   function renderEvent(e) {
-    var html = '<div class="evpage themed" style="' + paletteStyle(e.palette) + '"><main class="wrap">' +
+    var html = '<div class="evpage themed" style="' + paletteStyle(e) + '"><main class="wrap">' +
       '<a class="back" href="#home">' + ICON_BACK + 'All events</a>' +
       artHTML(e, "art") +
       '<header class="evhead">' +

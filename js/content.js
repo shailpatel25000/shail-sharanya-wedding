@@ -34,8 +34,9 @@ window.WEDDING = {
         { t: "1:00 PM",  title: "Lunch" },
       ],
       art: "art/mehendi.jpg",
-      // placeholder palette until the watercolour arrives; then sampled from the painting
-      palette: { bg: "#f6efd2", fg: "#3a3416", accent: "#a67c12", accent2: "#5f7a2a", soft: "#ebe0ad" },
+      // palette taken from the painting; wash = blurred copy used as page background
+      wash: "art/mehendi-wash.jpg",
+      palette: { bg: "#fbf3df", fg: "#5a3a16", accent: "#c9832a", accent2: "#7b8a3e", soft: "#f1e2bd" },
     },
     {
       id: "sangeet",
@@ -59,7 +60,8 @@ window.WEDDING = {
         { t: "9:30 PM", title: "Dinner and open floor" },
       ],
       art: "art/sangeet.jpg",
-      palette: { bg: "#2b1639", fg: "#f6e9f8", accent: "#e8a6c9", accent2: "#c9a24e", soft: "#3f2452" },
+      wash: "art/sangeet-wash.jpg",
+      palette: { bg: "#1c2b47", fg: "#eef1f5", accent: "#d5a860", accent2: "#5b8def", soft: "#28395a" },
     },
     {
       id: "wedding",
@@ -85,7 +87,8 @@ window.WEDDING = {
         { t: "11:00 PM", title: "Vidaai" },
       ],
       art: "art/wedding.jpg",
-      palette: { bg: "#7a1c25", fg: "#fcefe4", accent: "#e2b85c", accent2: "#f2d7a0", soft: "#92303a" },
+      wash: "art/wedding-wash.jpg",
+      palette: { bg: "#f3e9d8", fg: "#5a1e14", accent: "#8c2f1d", accent2: "#5f7a2d", soft: "#e8d9c2" },
     },
   ],
 };
