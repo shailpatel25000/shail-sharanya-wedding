@@ -106,9 +106,9 @@ h2.sec-title:after{content:"";flex:1;height:1px;background:var(--rule)}
 
 /* footer */
 footer{padding-block:26px 44px;color:var(--muted);font-size:13.5px;text-align:center}
-footer .contacts{display:flex;flex-wrap:wrap;justify-content:center;gap:6px 22px;margin:8px 0 0;padding:0;list-style:none}
-footer .contacts b{color:var(--fg)}
-footer .contacts a{color:var(--fg);text-decoration:none;font-weight:600}
+footer .contacts{display:flex;flex-wrap:wrap;justify-content:center;gap:10px 12px;margin:12px 0 0;padding:0;list-style:none}
+footer .wa{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:9px 16px 9px 12px;border-radius:999px;border:1.5px solid var(--rule);background:color-mix(in srgb,var(--ev-bg) 60%,transparent);color:var(--fg);text-decoration:none;font-weight:600;font-size:13.5px}
+footer .wa svg{width:20px;height:20px;color:#25d366;flex:none}
 
 @media (prefers-reduced-motion:no-preference){
   .bgart,.bgtint,body,.tab,.btn{transition:background-color .35s,color .35s,border-color .35s}

@@ -13,6 +13,7 @@
     var p = ev.palette;
     return "--ev-bg:" + p.bg + ";--ev-fg:" + p.fg + ";--ev-accent:" + p.accent + ";--ev-accent2:" + p.accent2 + ";--ev-soft:" + p.soft;
   }
+  var ICON_WA = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5.1-1.3A10 10 0 1 0 12 2zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1-.2.2-.6.8-.8 1-.1.2-.3.2-.5.1-.2-.1-1-.4-2-1.2-.7-.7-1.2-1.5-1.4-1.7-.1-.2 0-.4.1-.5l.4-.4.2-.4c.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.4.1-.7.3-.2.3-.9.9-.9 2.1s.9 2.5 1 2.6c.1.2 1.8 2.8 4.4 3.9 1.6.7 2.2.7 3 .6.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.1-1.2-.1-.1-.2-.2-.4-.3z"/></svg>';
   var ICON_PIN = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 1 1 16 0z"/><circle cx="12" cy="10" r="3"/></svg>';
 
   /* ---------- directions: one QR, one site, one Google Maps link on every platform.
@@ -57,8 +58,8 @@
         '</header>' +
 
         '<nav class="strip" aria-label="Events"><ul class="tabs">' +
-          evs.map(function (e) {
-            return '<li><a class="tab" href="#' + e.id + '"' + (e.id === sel.id ? ' aria-current="true"' : '') + '>' +
+          evs.map(function (e, i) {
+            return '<li><a class="tab" href="' + (i === 0 ? '#' : '#' + e.id) + '"' + (e.id === sel.id ? ' aria-current="true"' : '') + '>' +
               '<small class="tnum">' + dayNum(e.dateISO) + ' ' + monShort(e.dateISO) + '</small><b>' + esc(e.name) + '</b></a></li>';
           }).join("") +
         '</ul></nav>' +
@@ -85,9 +86,9 @@
         '</section>' +
 
         '<footer>' +
-          '<p class="eyebrow">Questions</p>' +
+          '<p class="eyebrow">Questions? Message us</p>' +
           '<ul class="contacts">' +
-            (W.contact || []).map(function (c) { return '<li><b>' + esc(c.name) + '</b> · <a class="tnum" href="tel:+91' + esc(String(c.phone).replace(/\D/g, "")) + '">' + esc(c.phone) + '</a></li>'; }).join("") +
+            (W.contact || []).map(function (c) { return '<li><a class="wa" href="https://wa.me/91' + esc(String(c.phone).replace(/\D/g, "")) + '" target="_blank" rel="noopener">' + ICON_WA + '<b>' + esc(c.name) + '</b></a></li>'; }).join("") +
           '</ul>' +
         '</footer>' +
       '</main>';
@@ -102,6 +103,7 @@
   var lastId = null;
   function route() {
     var id = (location.hash || "").replace(/^#\/?/, "");
+    if (!id) id = W.events[0].id;
     var sel = W.events.filter(function (e) { return e.id === id; })[0] || W.events[0];
     var hadRender = lastId !== null;
     var stripTop = hadRender ? (document.querySelector(".strip") || {}).offsetTop : 0;
