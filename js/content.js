@@ -7,8 +7,9 @@ window.WEDDING = {
   city: "Ahmedabad",
   dateLine: "29 & 30 November 2026",
   invite: "Two days of celebration as we begin a lifetime together. We would love to have you there.",
-  contact: [                                          // TODO logistics contacts shown in footer
-    { name: "Shail", phone: "" },
+  contact: [
+    { name: "Shail", phone: "97277 37451" },
+    { name: "Sharanya", phone: "89200 60302" },
   ],
 
   events: [
@@ -29,8 +30,8 @@ window.WEDDING = {
       dress: "", dressImage: "",                      // TODO text and/or an image path like "art/dress-mehendi.jpg"; both empty = "Coming soon"
       about: "A relaxed morning of mehendi, haldi, music and lunch. Come early, stay for the food.", // TODO
       flow: [                                         // TODO sample flow, replace
-        { t: "10:30 AM", title: "Haldi", note: "Ceremony begins" },
-        { t: "11:30 AM", title: "Mehendi", note: "Artists available for all guests" },
+        { t: "10:30 AM", title: "Mehendi", note: "Artists available for all guests" },
+        { t: "11:30 AM", title: "Haldi" },
         { t: "1:00 PM",  title: "Lunch" },
       ],
       art: "art/mehendi.jpg",

@@ -7,10 +7,6 @@
 
   /* ---------- helpers ---------- */
   function esc(s) { return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) { return ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]; }); }
-  function isIOS() {
-    var ua = navigator.userAgent || "";
-    return /iPad|iPhone|iPod/.test(ua) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
-  }
   function dayNum(iso) { return iso.slice(8, 10); }
   function monShort(iso) { return ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"][+iso.slice(5, 7) - 1]; }
   function paletteStyle(ev) {
@@ -19,26 +15,16 @@
   }
   var ICON_PIN = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 1 1 16 0z"/><circle cx="12" cy="10" r="3"/></svg>';
 
-  /* ---------- directions: one QR, one site, native maps on both platforms ---------- */
-  function mapLinks(v) {
-    var hasCoords = typeof v.lat === "number" && typeof v.lng === "number";
-    var q = encodeURIComponent((v.name || "") + (v.address ? ", " + v.address : ""));
-    var google = hasCoords
-      ? "https://www.google.com/maps/dir/?api=1&destination=" + v.lat + "," + v.lng
-      : (v.mapsLink || null);
-    var apple = hasCoords
-      ? "https://maps.apple.com/?daddr=" + v.lat + "," + v.lng + "&q=" + encodeURIComponent(v.name || "")
-      : (v.mapsLink ? "https://maps.apple.com/?q=" + q : null);
-    return { google: google, apple: apple, ready: !!(google || apple) };
+  /* ---------- directions: one QR, one site, one Google Maps link on every platform.
+     maps.app.goo.gl share links open the Google Maps app on Android and on iOS when it is installed, else the browser. ---------- */
+  function mapLink(v) {
+    if (typeof v.lat === "number" && typeof v.lng === "number") return "https://www.google.com/maps/dir/?api=1&destination=" + v.lat + "," + v.lng;
+    return v.mapsLink || null;
   }
   function directionsButtons(v) {
-    var L = mapLinks(v);
-    if (!L.ready) return '<a class="btn p" aria-disabled="true">' + ICON_PIN + 'Location coming soon</a>';
-    if (isIOS()) {
-      return (L.apple ? '<a class="btn p" href="' + esc(L.apple) + '" target="_blank" rel="noopener">' + ICON_PIN + 'Apple Maps</a>' : "") +
-             (L.google ? '<a class="btn s" href="' + esc(L.google) + '" target="_blank" rel="noopener">' + ICON_PIN + 'Google Maps</a>' : "");
-    }
-    return '<a class="btn p" href="' + esc(L.google || L.apple) + '" target="_blank" rel="noopener">' + ICON_PIN + 'Directions</a>';
+    var L = mapLink(v);
+    if (!L) return '<a class="btn p" aria-disabled="true">' + ICON_PIN + 'Location coming soon</a>';
+    return '<a class="btn p" href="' + esc(L) + '" target="_blank" rel="noopener">' + ICON_PIN + 'Directions in Google Maps</a>';
   }
 
   /* ---------- timeline: time | rail of dots joined by a line | text ---------- */
@@ -60,14 +46,6 @@
   /* ---------- render ---------- */
   function render(sel) {
     var evs = W.events;
-
-    // both days at a glance
-    var days = {};
-    evs.forEach(function (e) {
-      var d = (days[e.dateISO] = days[e.dateISO] || { label: e.dayLabel, items: [] });
-      if (e.flow && e.flow.length > 1) e.flow.forEach(function (f, i) { d.items.push({ t: f.t, title: f.title, note: f.note, ev: e, first: i === 0 }); });
-      else d.items.push({ t: e.start, title: e.name, note: e.venue.name, ev: e, first: true });
-    });
 
     var html =
       '<div class="bgart" style="background-image:url(&quot;' + esc(sel.wash || sel.art) + '&quot;)"></div><div class="bgtint"></div>' +
@@ -97,7 +75,6 @@
             '<p class="venue-name">' + esc(sel.venue.name) + '</p>' +
             '<p class="venue-addr">' + esc(sel.venue.address) + '</p>' +
             '<div class="btns">' + directionsButtons(sel.venue) + '</div>' +
-            (isIOS() && mapLinks(sel.venue).ready ? '<p class="note">Opens in the app you choose.</p>' : '') +
           '</section>' +
           '<section class="block"><h2 class="sec-title">Dress code</h2>' + dressBlock(sel) + '</section>' +
           (sel.about ? '<section class="block about"><h2 class="sec-title">About</h2><p>' + esc(sel.about) + '</p></section>' : '') +
@@ -107,25 +84,10 @@
           '</section>' +
         '</section>' +
 
-        '<section class="panel" aria-labelledby="days-title">' +
-          '<h2 class="sec-title" id="days-title">Both days at a glance</h2>' +
-          Object.keys(days).sort().map(function (iso) {
-            var d = days[iso];
-            return '<div class="day"><h3>' + esc(d.label) + '</h3>' +
-              timeline(d.items.map(function (it) {
-                return {
-                  t: it.t, cur: it.ev.id === sel.id, note: it.note,
-                  html: it.first ? '<a href="#' + it.ev.id + '">' + esc(it.ev.name) + '</a>' + (it.title !== it.ev.name ? ' · ' + esc(it.title) : '') : esc(it.title)
-                };
-              })) +
-            '</div>';
-          }).join("") +
-        '</section>' +
-
         '<footer>' +
           '<p class="eyebrow">Questions</p>' +
           '<ul class="contacts">' +
-            (W.contact || []).map(function (c) { return '<li><b>' + esc(c.name) + '</b>' + (c.phone ? ' · <span class="tnum">' + esc(c.phone) + '</span>' : ' · number to be added') + '</li>'; }).join("") +
+            (W.contact || []).map(function (c) { return '<li><b>' + esc(c.name) + '</b> · <a class="tnum" href="tel:+91' + esc(String(c.phone).replace(/\D/g, "")) + '">' + esc(c.phone) + '</a></li>'; }).join("") +
           '</ul>' +
         '</footer>' +
       '</main>';
