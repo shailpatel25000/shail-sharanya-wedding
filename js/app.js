@@ -41,6 +41,22 @@
     return '<a class="btn p" href="' + esc(L.google || L.apple) + '" target="_blank" rel="noopener">' + ICON_PIN + 'Directions</a>';
   }
 
+  /* ---------- timeline: time | rail of dots joined by a line | text ---------- */
+  function timeline(items) {
+    return '<ol class="tl">' + items.map(function (it) {
+      return '<li class="row' + (it.cur ? ' cur' : '') + '"><span class="t tnum">' + esc(it.t) + '</span><span class="rail" aria-hidden="true"></span>' +
+        '<span class="d">' + it.html + (it.note ? '<small>' + esc(it.note) + '</small>' : '') + '</span></li>';
+    }).join("") + '</ol>';
+  }
+
+  /* ---------- dress code: text and/or an image in a collapsible; "Coming soon" until either exists ---------- */
+  function dressBlock(e) {
+    if (!e.dress && !e.dressImage) return '<a class="btn s" aria-disabled="true">Coming soon</a>';
+    return '<details class="fold"><summary>See the dress code<span class="chev" aria-hidden="true"></span></summary><div class="fold-body">' +
+      (e.dressImage ? '<img src="' + esc(e.dressImage) + '" alt="Dress code for ' + esc(e.name) + '">' : '') +
+      (e.dress ? '<p class="dress">' + esc(e.dress) + '</p>' : '') + '</div></details>';
+  }
+
   /* ---------- render ---------- */
   function render(sel) {
     var evs = W.events;
@@ -57,10 +73,9 @@
       '<div class="bgart" style="background-image:url(&quot;' + esc(sel.wash || sel.art) + '&quot;)"></div><div class="bgtint"></div>' +
       '<main class="wrap">' +
         '<header class="hero">' +
-          '<p class="eyebrow">' + esc(W.dateLine) + '</p>' +
+          '<p class="eyebrow">' + esc(W.dateLine) + ' <span class="dot">·</span> ' + esc(W.city) + '</p>' +
           '<h1 class="display">' + esc(W.couple.a) + ' <span class="amp">&amp;</span> ' + esc(W.couple.b) + '</h1>' +
           '<p class="lead">' + esc(W.invite) + '</p>' +
-          '<p class="city">' + esc(W.city) + '</p>' +
         '</header>' +
 
         '<nav class="strip" aria-label="Events"><ul class="tabs">' +
@@ -84,13 +99,11 @@
             '<div class="btns">' + directionsButtons(sel.venue) + '</div>' +
             (isIOS() && mapLinks(sel.venue).ready ? '<p class="note">Opens in the app you choose.</p>' : '') +
           '</section>' +
-          (sel.dress ? '<section class="block"><h2 class="sec-title">Dress code</h2><p class="dress">' + esc(sel.dress) + '</p></section>' : '') +
+          '<section class="block"><h2 class="sec-title">Dress code</h2>' + dressBlock(sel) + '</section>' +
           (sel.about ? '<section class="block about"><h2 class="sec-title">About</h2><p>' + esc(sel.about) + '</p></section>' : '') +
           '<section class="block">' +
             '<h2 class="sec-title">Flow of the event</h2>' +
-            '<div class="tl">' + sel.flow.map(function (f) {
-              return '<span class="t tnum">' + esc(f.t) + '</span><span class="d">' + esc(f.title) + (f.note ? '<small>' + esc(f.note) + '</small>' : '') + '</span>';
-            }).join("") + '</div>' +
+            timeline(sel.flow.map(function (f) { return { t: f.t, html: esc(f.title), note: f.note, cur: true }; })) +
           '</section>' +
         '</section>' +
 
@@ -98,14 +111,14 @@
           '<h2 class="sec-title" id="days-title">Both days at a glance</h2>' +
           Object.keys(days).sort().map(function (iso) {
             var d = days[iso];
-            return '<div class="day"><h3>' + esc(d.label) + '</h3><div class="tl">' +
-              d.items.map(function (it) {
-                var cur = it.ev.id === sel.id ? ' cur' : '';
-                return '<span class="t tnum">' + esc(it.t) + '</span>' +
-                  '<span class="d' + cur + '">' + (it.first ? '<a href="#' + it.ev.id + '">' + esc(it.ev.name) + '</a>' + (it.title !== it.ev.name ? ' · ' + esc(it.title) : '') : esc(it.title)) +
-                  (it.note ? '<small>' + esc(it.note) + '</small>' : '') + '</span>';
-              }).join("") +
-            '</div></div>';
+            return '<div class="day"><h3>' + esc(d.label) + '</h3>' +
+              timeline(d.items.map(function (it) {
+                return {
+                  t: it.t, cur: it.ev.id === sel.id, note: it.note,
+                  html: it.first ? '<a href="#' + it.ev.id + '">' + esc(it.ev.name) + '</a>' + (it.title !== it.ev.name ? ' · ' + esc(it.title) : '') : esc(it.title)
+                };
+              })) +
+            '</div>';
           }).join("") +
         '</section>' +
 

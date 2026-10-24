@@ -40,7 +40,7 @@ h2.sec-title:after{content:"";flex:1;height:1px;background:var(--rule)}
 .hero .display{font-size:clamp(42px,12vw,68px);margin-top:12px;text-shadow:0 1px 0 color-mix(in srgb,var(--ev-bg) 60%,transparent)}
 .hero .display .amp{font-style:italic;font-weight:400;color:var(--accent)}
 .hero .lead{font-family:var(--f-display);font-style:italic;font-size:18px;line-height:1.35;margin:18px auto 0;max-width:34ch}
-.hero .city{margin:6px 0 0;color:var(--muted);font-size:13.5px}
+.hero .eyebrow .dot{opacity:.5;margin:0 2px}
 
 /* ---------- event strip (sticky) ---------- */
 .strip{position:sticky;top:env(safe-area-inset-top,0px);z-index:10;margin:0 calc(-1*var(--gutter)) 0 calc(-1*var(--gutter-r));padding:10px var(--gutter-r) 12px var(--gutter);background:color-mix(in srgb,var(--ev-bg) 55%,transparent);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
@@ -78,13 +78,29 @@ h2.sec-title:after{content:"";flex:1;height:1px;background:var(--rule)}
 .btns{display:flex;flex-wrap:wrap;gap:10px}
 .btns .btn{flex:1 1 140px}
 
-/* timelines */
-.tl{display:grid;grid-template-columns:auto 1fr;gap:10px 16px;align-items:baseline}
-.tl .t{font-weight:600;font-size:13.5px;white-space:nowrap;color:var(--accent)}
-.tl .d{font-size:14.5px;line-height:1.4;padding-bottom:10px;border-bottom:1px solid var(--rule)}
+/* timelines: a rail of dots joined by a line; the selected event's rows are filled, the rest hollow */
+.tl{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:5.6em 14px 1fr;column-gap:12px}
+.tl .row{display:contents}
+.tl .t{font-weight:600;font-size:13px;white-space:nowrap;color:var(--accent);text-align:right;padding-top:2px}
+.tl .rail{position:relative;width:14px;align-self:stretch}
+.tl .rail::after{content:"";position:absolute;left:50%;top:6px;width:10px;height:10px;transform:translateX(-50%);border-radius:50%;border:2px solid var(--accent);background:var(--ev-bg);box-sizing:border-box}
+.tl .row.cur .rail::after{background:var(--accent)}
+.tl .rail::before{content:"";position:absolute;left:50%;top:16px;bottom:-2px;width:2px;transform:translateX(-50%);background:var(--rule)}
+.tl .row:last-child .rail::before{display:none}
+.tl .d{font-size:14.5px;line-height:1.4;padding-bottom:16px;min-width:0}
+.tl .row:last-child .d{padding-bottom:2px}
 .tl .d small{display:block;color:var(--muted);font-size:12.5px;margin-top:2px}
 .tl .d a{color:var(--accent);text-decoration:none;font-weight:600}
-.tl .d.cur a{text-decoration:underline;text-underline-offset:3px}
+.tl .row.cur .d a{text-decoration:underline;text-underline-offset:3px}
+
+/* collapsible (dress code) */
+.fold{border:1.5px solid var(--rule);border-radius:16px;overflow:hidden}
+.fold summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 16px;font-weight:600;font-size:13.5px;min-height:44px}
+.fold summary::-webkit-details-marker{display:none}
+.fold .chev{width:9px;height:9px;border-right:2px solid var(--accent);border-bottom:2px solid var(--accent);transform:rotate(45deg);margin-right:4px;transition:transform .2s}
+.fold[open] .chev{transform:rotate(-135deg)}
+.fold-body{padding:0 16px 16px;display:grid;gap:12px}
+.fold-body img{border-radius:12px;width:100%}
 .day + .day{margin-top:18px}
 .day h3{font-family:var(--f-display);font-weight:500;font-size:20px;margin:0 0 10px}
 

@@ -3,10 +3,10 @@
    Lines marked TODO are placeholders waiting for real content.
    ------------------------------------------------------------------ */
 window.WEDDING = {
-  couple: { a: "Shail", b: "Partner" },            // TODO partner's name
+  couple: { a: "Shail", b: "Sharanya" },
   city: "Ahmedabad",
   dateLine: "29 & 30 November 2026",
-  invite: "Together with our families, we invite you to celebrate with us.", // TODO
+  invite: "Two days of celebration as we begin a lifetime together. We would love to have you there.",
   contact: [                                          // TODO logistics contacts shown in footer
     { name: "Shail", phone: "" },
   ],
@@ -23,10 +23,10 @@ window.WEDDING = {
       venue: {
         name: "Gateway Hotel",
         address: "Sindhu Bhavan Road, Ahmedabad",
-        lat: null, lng: null,                         // TODO coordinates from Shail
-        mapsLink: null,                               // or a Google Maps share link
+        lat: null, lng: null,
+        mapsLink: "https://maps.app.goo.gl/gCFKSY9LTFXQ22Eu6",
       },
-      dress: "",                                      // TODO e.g. "Yellows and greens, comfortable cottons"
+      dress: "", dressImage: "",                      // TODO text and/or an image path like "art/dress-mehendi.jpg"; both empty = "Coming soon"
       about: "A relaxed morning of mehendi, haldi, music and lunch. Come early, stay for the food.", // TODO
       flow: [                                         // TODO sample flow, replace
         { t: "10:30 AM", title: "Haldi", note: "Ceremony begins" },
@@ -48,11 +48,11 @@ window.WEDDING = {
       end: "11:00 PM",
       venue: {
         name: "Saket 4 by FMS",
-        address: "Ahmedabad",                         // TODO full address
-        lat: null, lng: null,                         // TODO coordinates from Shail (do not look up)
-        mapsLink: null,
+        address: "Rancharda, Near Shilaj, Ahmedabad",
+        lat: null, lng: null,
+        mapsLink: "https://maps.app.goo.gl/g1yKie9zu79Kzikv6",
       },
-      dress: "",                                      // TODO
+      dress: "", dressImage: "",                      // TODO
       about: "An evening of performances by family and friends, followed by dinner and an open dance floor.", // TODO
       flow: [                                         // TODO sample flow, replace
         { t: "7:00 PM", title: "Guests arrive", note: "Welcome drinks" },
@@ -72,12 +72,12 @@ window.WEDDING = {
       start: "2:30 PM",
       end: "11:00 PM",
       venue: {
-        name: "Wedding venue",                        // TODO venue name
-        address: "Ahmedabad",                         // TODO
-        lat: null, lng: null,                         // TODO
-        mapsLink: null,
+        name: "Vrundavan Party Plot",
+        address: "Sindhu Bhavan Road, Ahmedabad",
+        lat: null, lng: null,
+        mapsLink: "https://maps.app.goo.gl/8Ci11omZoiikDXpn8",
       },
-      dress: "",                                      // TODO
+      dress: "", dressImage: "",                      // TODO
       about: "The baraat leaves from Shail's home in the afternoon and reaches the venue by evening. Hastmelap, dinner and vidaai follow.", // TODO
       flow: [
         { t: "2:30 PM",  title: "Baraat departs", note: "From Shail's home" },
